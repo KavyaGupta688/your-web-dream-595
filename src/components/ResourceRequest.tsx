@@ -34,7 +34,7 @@ const ResourceRequest = ({
 
   const handleRequestChange = (index: number, value: string) => {
     const newRequest = [...request];
-    newRequest[index] = parseInt(value) || 0;
+    newRequest[index] = value === '' ? 0 : (parseInt(value) || 0);
     setRequest(newRequest);
   };
 

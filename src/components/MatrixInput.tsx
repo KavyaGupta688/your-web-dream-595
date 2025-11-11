@@ -13,7 +13,7 @@ interface MatrixInputProps {
 const MatrixInput = ({ matrix, onChange, rows, cols, vmLabels, resourceLabels }: MatrixInputProps) => {
   const handleChange = (row: number, col: number, value: string) => {
     const newMatrix = matrix.map(r => [...r]);
-    newMatrix[row][col] = parseInt(value) || 0;
+    newMatrix[row][col] = value === '' ? 0 : (parseInt(value) || 0);
     onChange(newMatrix);
   };
 

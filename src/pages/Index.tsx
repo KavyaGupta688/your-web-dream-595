@@ -129,7 +129,7 @@ const Index = () => {
                       min="1"
                       max="10"
                       value={numProcesses}
-                      onChange={(e) => setNumProcesses(parseInt(e.target.value) || 1)}
+                      onChange={(e) => setNumProcesses(e.target.value === '' ? 1 : (parseInt(e.target.value) || 1))}
                       disabled={initialized}
                     />
                   </div>
@@ -141,7 +141,7 @@ const Index = () => {
                       min="1"
                       max="10"
                       value={numResources}
-                      onChange={(e) => setNumResources(parseInt(e.target.value) || 1)}
+                      onChange={(e) => setNumResources(e.target.value === '' ? 1 : (parseInt(e.target.value) || 1))}
                       disabled={initialized}
                     />
                   </div>
