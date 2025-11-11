@@ -2,8 +2,8 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface MatrixInputProps {
-  matrix: number[][];
-  onChange: (matrix: number[][]) => void;
+  matrix: (number | '')[][];
+  onChange: (matrix: (number | '')[][]) => void;
   rows: number;
   cols: number;
   vmLabels?: boolean;
@@ -13,7 +13,8 @@ interface MatrixInputProps {
 const MatrixInput = ({ matrix, onChange, rows, cols, vmLabels, resourceLabels }: MatrixInputProps) => {
   const handleChange = (row: number, col: number, value: string) => {
     const newMatrix = matrix.map(r => [...r]);
-    newMatrix[row][col] = value === '' ? 0 : (parseInt(value) || 0);
+    // Allow temporary empty state for clearing
+    newMatrix[row][col] = value === '' ? '' as any : (parseInt(value) || 0);
     onChange(newMatrix);
   };
 
@@ -41,7 +42,7 @@ const MatrixInput = ({ matrix, onChange, rows, cols, vmLabels, resourceLabels }:
                   <Input
                     type="number"
                     min="0"
-                    value={matrix[rowIndex]?.[colIndex] || 0}
+                    value={matrix[rowIndex]?.[colIndex] === '' ? '' : matrix[rowIndex]?.[colIndex] || 0}
                     onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
                     className="w-20 text-center"
                   />

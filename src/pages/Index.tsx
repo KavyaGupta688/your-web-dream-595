@@ -15,8 +15,8 @@ import ResourceRequest from "@/components/ResourceRequest";
 import { calculateNeed, checkSafety, requestResources } from "@/lib/bankersAlgorithm";
 
 const Index = () => {
-  const [numProcesses, setNumProcesses] = useState(5);
-  const [numResources, setNumResources] = useState(3);
+  const [numProcesses, setNumProcesses] = useState<number | ''>(5);
+  const [numResources, setNumResources] = useState<number | ''>(3);
   const [available, setAvailable] = useState<number[]>([3, 3, 2]);
   const [maximum, setMaximum] = useState<number[][]>([
     [7, 5, 3],
@@ -37,10 +37,15 @@ const Index = () => {
   const [initialized, setInitialized] = useState(false);
 
   const handleInitialize = () => {
-    const newAvailable = Array(numResources).fill(0);
-    const newMaximum = Array(numProcesses).fill(null).map(() => Array(numResources).fill(0));
-    const newAllocation = Array(numProcesses).fill(null).map(() => Array(numResources).fill(0));
+    const processes = typeof numProcesses === 'string' ? parseInt(numProcesses) || 1 : numProcesses;
+    const resources = typeof numResources === 'string' ? parseInt(numResources) || 1 : numResources;
     
+    const newAvailable = Array(resources).fill(0);
+    const newMaximum = Array(processes).fill(null).map(() => Array(resources).fill(0));
+    const newAllocation = Array(processes).fill(null).map(() => Array(resources).fill(0));
+    
+    setNumProcesses(processes);
+    setNumResources(resources);
     setAvailable(newAvailable);
     setMaximum(newMaximum);
     setAllocation(newAllocation);
@@ -129,7 +134,7 @@ const Index = () => {
                       min="1"
                       max="10"
                       value={numProcesses}
-                      onChange={(e) => setNumProcesses(e.target.value === '' ? 1 : (parseInt(e.target.value) || 1))}
+                      onChange={(e) => setNumProcesses(e.target.value === '' ? '' : parseInt(e.target.value) || '')}
                       disabled={initialized}
                     />
                   </div>
@@ -141,7 +146,7 @@ const Index = () => {
                       min="1"
                       max="10"
                       value={numResources}
-                      onChange={(e) => setNumResources(e.target.value === '' ? 1 : (parseInt(e.target.value) || 1))}
+                      onChange={(e) => setNumResources(e.target.value === '' ? '' : parseInt(e.target.value) || '')}
                       disabled={initialized}
                     />
                   </div>

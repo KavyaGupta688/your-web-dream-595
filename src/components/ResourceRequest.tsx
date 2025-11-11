@@ -25,16 +25,18 @@ const ResourceRequest = ({
   isSafe,
 }: ResourceRequestProps) => {
   const [selectedVM, setSelectedVM] = useState<number>(0);
-  const [request, setRequest] = useState<number[]>(Array(numResources).fill(0));
+  const [request, setRequest] = useState<(number | '')[]>(Array(numResources).fill(0));
 
   const handleRequest = () => {
-    onRequest(selectedVM, request);
+    // Convert any empty strings to 0 before submitting
+    const cleanedRequest = request.map(r => typeof r === 'string' ? 0 : r);
+    onRequest(selectedVM, cleanedRequest);
     setRequest(Array(numResources).fill(0));
   };
 
   const handleRequestChange = (index: number, value: string) => {
     const newRequest = [...request];
-    newRequest[index] = value === '' ? 0 : (parseInt(value) || 0);
+    newRequest[index] = value === '' ? '' as any : (parseInt(value) || 0);
     setRequest(newRequest);
   };
 
@@ -86,7 +88,7 @@ const ResourceRequest = ({
                   type="number"
                   min="0"
                   max={need[selectedVM]?.[i] || 0}
-                  value={request[i]}
+                  value={request[i] === '' ? '' : request[i]}
                   onChange={(e) => handleRequestChange(i, e.target.value)}
                   disabled={!isSafe}
                 />
@@ -100,11 +102,11 @@ const ResourceRequest = ({
           <Button 
             onClick={handleRequest} 
             className="w-full" 
-            disabled={!isSafe || request.every(r => r === 0)}
+            disabled={!isSafe || request.every(r => r === 0 || r === '')}
           >
             Submit Resource Request
           </Button>
-          {request.every(r => r === 0) && isSafe && (
+          {request.every(r => r === 0 || r === '') && isSafe && (
             <p className="text-xs text-muted-foreground text-center">
               Enter resource amounts above to submit a request
             </p>
