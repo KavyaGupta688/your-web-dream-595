@@ -91,15 +91,24 @@ const ResourceRequest = ({
                   disabled={!isSafe}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Available: {available[i]} | Need: {need[selectedVM]?.[i] || 0}
+                  Max: {need[selectedVM]?.[i] || 0} | Available: {available[i]}
                 </p>
               </div>
             ))}
           </div>
 
-          <Button onClick={handleRequest} className="w-full" disabled={!isSafe}>
+          <Button 
+            onClick={handleRequest} 
+            className="w-full" 
+            disabled={!isSafe || request.every(r => r === 0)}
+          >
             Submit Resource Request
           </Button>
+          {request.every(r => r === 0) && isSafe && (
+            <p className="text-xs text-muted-foreground text-center">
+              Enter resource amounts above to submit a request
+            </p>
+          )}
         </div>
 
         <div className="pt-4 border-t space-y-3">

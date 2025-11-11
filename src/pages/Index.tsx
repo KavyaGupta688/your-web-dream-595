@@ -265,34 +265,43 @@ const Index = () => {
                 </div>
 
                 {safetyResult && (
-                  <Card className={safetyResult.isSafe ? "border-green-500/50" : "border-destructive/50"}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
+                  <div className="flex items-center justify-center py-8">
+                    <Card className={`w-full max-w-3xl ${safetyResult.isSafe ? "border-green-500 border-2 shadow-lg shadow-green-500/20" : "border-destructive border-2 shadow-lg shadow-destructive/20"}`}>
+                      <CardHeader className="text-center space-y-4 pb-6">
+                        <div className="flex justify-center">
+                          {safetyResult.isSafe ? (
+                            <CheckCircle2 className="w-16 h-16 text-green-500" />
+                          ) : (
+                            <XCircle className="w-16 h-16 text-destructive" />
+                          )}
+                        </div>
+                        <CardTitle className="text-3xl font-bold">
+                          {safetyResult.isSafe ? (
+                            <span className="text-green-500">System State: SAFE</span>
+                          ) : (
+                            <span className="text-destructive">System State: UNSAFE</span>
+                          )}
+                        </CardTitle>
+                        <CardDescription className="text-base">
+                          {safetyResult.isSafe 
+                            ? "The system can safely allocate resources without risk of deadlock"
+                            : "Warning: Current allocation may lead to deadlock"}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
                         {safetyResult.isSafe ? (
-                          <>
-                            <CheckCircle2 className="w-5 h-5 text-green-500" />
-                            System State: SAFE
-                          </>
+                          <SafeSequence sequence={safetyResult.sequence} />
                         ) : (
-                          <>
-                            <XCircle className="w-5 h-5 text-destructive" />
-                            System State: UNSAFE
-                          </>
+                          <Alert variant="destructive" className="text-base">
+                            <AlertDescription className="text-center py-2">
+                              No safe sequence exists. The system may enter a deadlock state! 
+                              Please adjust the allocation or maximum matrices.
+                            </AlertDescription>
+                          </Alert>
                         )}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {safetyResult.isSafe ? (
-                        <SafeSequence sequence={safetyResult.sequence} />
-                      ) : (
-                        <Alert variant="destructive">
-                          <AlertDescription>
-                            No safe sequence exists. The system may enter a deadlock state!
-                          </AlertDescription>
-                        </Alert>
-                      )}
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </div>
                 )}
               </>
             )}
