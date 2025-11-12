@@ -220,6 +220,8 @@ const Index = () => {
                 )}
               </CardContent>
             </Card>
+
+            {safetyResult && <SafetyResultDisplay safetyResult={safetyResult} />}
           </TabsContent>
 
           <TabsContent value="matrices" className="space-y-6">
