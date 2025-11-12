@@ -58,7 +58,9 @@ const Index = () => {
     const calculatedNeed = calculateNeed(maximum, allocation);
     setNeed(calculatedNeed);
     
-    const result = checkSafety(available, maximum, allocation, calculatedNeed, numProcesses, numResources);
+    const processes = typeof numProcesses === 'number' ? numProcesses : parseInt(String(numProcesses)) || 0;
+    const resources = typeof numResources === 'number' ? numResources : parseInt(String(numResources)) || 0;
+    const result = checkSafety(available, maximum, allocation, calculatedNeed, processes, resources);
     setSafetyResult(result);
     
     if (result.isSafe) {
@@ -69,6 +71,8 @@ const Index = () => {
   };
 
   const handleResourceRequest = (processId: number, request: number[]) => {
+    const processes = typeof numProcesses === 'number' ? numProcesses : parseInt(String(numProcesses)) || 0;
+    const resources = typeof numResources === 'number' ? numResources : parseInt(String(numResources)) || 0;
     const result = requestResources(
       processId,
       request,
@@ -76,8 +80,8 @@ const Index = () => {
       maximum,
       allocation,
       need,
-      numProcesses,
-      numResources
+      processes,
+      resources
     );
 
     if (result.granted) {
@@ -165,7 +169,7 @@ const Index = () => {
                           matrix={[available]}
                           onChange={(newMatrix) => setAvailable(newMatrix[0])}
                           rows={1}
-                          cols={numResources}
+                          cols={typeof numResources === 'number' ? numResources : parseInt(String(numResources)) || 0}
                           resourceLabels={true}
                         />
                       </div>
@@ -175,8 +179,8 @@ const Index = () => {
                         <MatrixInput
                           matrix={maximum}
                           onChange={setMaximum}
-                          rows={numProcesses}
-                          cols={numResources}
+                          rows={typeof numProcesses === 'number' ? numProcesses : parseInt(String(numProcesses)) || 0}
+                          cols={typeof numResources === 'number' ? numResources : parseInt(String(numResources)) || 0}
                           vmLabels={true}
                           resourceLabels={true}
                         />
@@ -187,8 +191,8 @@ const Index = () => {
                         <MatrixInput
                           matrix={allocation}
                           onChange={setAllocation}
-                          rows={numProcesses}
-                          cols={numResources}
+                          rows={typeof numProcesses === 'number' ? numProcesses : parseInt(String(numProcesses)) || 0}
+                          cols={typeof numResources === 'number' ? numResources : parseInt(String(numResources)) || 0}
                           vmLabels={true}
                           resourceLabels={true}
                         />
@@ -327,8 +331,8 @@ const Index = () => {
               </Alert>
             ) : (
               <ResourceRequest
-                numProcesses={numProcesses}
-                numResources={numResources}
+                numProcesses={typeof numProcesses === 'number' ? numProcesses : parseInt(String(numProcesses)) || 0}
+                numResources={typeof numResources === 'number' ? numResources : parseInt(String(numResources)) || 0}
                 available={available}
                 need={need}
                 onRequest={handleResourceRequest}
