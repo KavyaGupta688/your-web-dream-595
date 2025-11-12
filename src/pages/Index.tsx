@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import MatrixInput from "@/components/MatrixInput";
 import MatrixDisplay from "@/components/MatrixDisplay";
 import SafeSequence from "@/components/SafeSequence";
+import SafetyResultDisplay from "@/components/SafetyResultDisplay";
 import ResourceRequest from "@/components/ResourceRequest";
 import { calculateNeed, checkSafety, requestResources } from "@/lib/bankersAlgorithm";
 
@@ -273,45 +274,7 @@ const Index = () => {
                   </Card>
                 </div>
 
-                {safetyResult && (
-                  <div className="flex items-center justify-center py-8">
-                    <Card className={`w-full max-w-3xl ${safetyResult.isSafe ? "border-green-500 border-2 shadow-lg shadow-green-500/20" : "border-destructive border-2 shadow-lg shadow-destructive/20"}`}>
-                      <CardHeader className="text-center space-y-4 pb-6">
-                        <div className="flex justify-center">
-                          {safetyResult.isSafe ? (
-                            <CheckCircle2 className="w-16 h-16 text-green-500" />
-                          ) : (
-                            <XCircle className="w-16 h-16 text-destructive" />
-                          )}
-                        </div>
-                        <CardTitle className="text-3xl font-bold">
-                          {safetyResult.isSafe ? (
-                            <span className="text-green-500">System State: SAFE</span>
-                          ) : (
-                            <span className="text-destructive">System State: UNSAFE</span>
-                          )}
-                        </CardTitle>
-                        <CardDescription className="text-base">
-                          {safetyResult.isSafe 
-                            ? "The system can safely allocate resources without risk of deadlock"
-                            : "Warning: Current allocation may lead to deadlock"}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        {safetyResult.isSafe ? (
-                          <SafeSequence sequence={safetyResult.sequence} />
-                        ) : (
-                          <Alert variant="destructive" className="text-base">
-                            <AlertDescription className="text-center py-2">
-                              No safe sequence exists. The system may enter a deadlock state! 
-                              Please adjust the allocation or maximum matrices.
-                            </AlertDescription>
-                          </Alert>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
+                {safetyResult && <SafetyResultDisplay safetyResult={safetyResult} />}
               </>
             )}
           </TabsContent>
@@ -330,14 +293,17 @@ const Index = () => {
                 </AlertDescription>
               </Alert>
             ) : (
-              <ResourceRequest
-                numProcesses={typeof numProcesses === 'number' ? numProcesses : parseInt(String(numProcesses)) || 0}
-                numResources={typeof numResources === 'number' ? numResources : parseInt(String(numResources)) || 0}
-                available={available}
-                need={need}
-                onRequest={handleResourceRequest}
-                isSafe={safetyResult.isSafe}
-              />
+              <>
+                <ResourceRequest
+                  numProcesses={typeof numProcesses === 'number' ? numProcesses : parseInt(String(numProcesses)) || 0}
+                  numResources={typeof numResources === 'number' ? numResources : parseInt(String(numResources)) || 0}
+                  available={available}
+                  need={need}
+                  onRequest={handleResourceRequest}
+                  isSafe={safetyResult.isSafe}
+                />
+                <SafetyResultDisplay safetyResult={safetyResult} />
+              </>
             )}
           </TabsContent>
         </Tabs>
